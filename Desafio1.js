@@ -19,8 +19,13 @@ class ProductManager {
             stock
         };
 
+
         const productCode = this.products.find((con) => con.code === code);
 
+        if (productCode.products.includes(newProduct)){
+            console.log(`Ya existe el ${newProduct}`);
+            return
+        }
         if (productCode) {
             console.warn(`El código ${code} ya se encuentra en nuestro registro`);
             return;
