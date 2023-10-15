@@ -44,10 +44,46 @@ class ProductManager {
             console.log(`Descripción: ${product.description}`);
             console.log(`Precio: ${product.price}`);
             console.log(`Stock: ${product.stock}`);
+            console.log(`Thumbnail: ${product.thumbnail}`);
+            console.log(`Code: ${product.code}`);
             console.log('---');
         });
     }
-}
+    
+
+    updateProduct(id, title, description, price, stock, thumbnail, code) {
+        const productIndex = this.products.findIndex((product) => product.id === id);
+        if (productIndex === -1) {
+            console.log("Producto no encontrado");
+            return;
+        }
+    
+        this.products[productIndex] = {
+            ...this.products[productIndex],
+            id,
+            title,
+            description,
+            price,
+            stock,
+            thumbnail,
+            code
+        };
+    }
+
+    deleteProduct(id) {
+        const productIndex = this.products.findIndex((product) => product.id === id);
+        if (productIndex === -1) {
+            console.log("Producto no encontrado");
+            return;
+        }
+
+        this.products.splice(productIndex, 1);
+        console.log("Producto eliminado");
+        this.displayProducts();
+    }
+    
+    }
+
 
 // Ejemplo de uso:
 const manager = new ProductManager();
@@ -69,4 +105,17 @@ if (product) {
     console.log("Producto no encontrado");
 }
 
+// Mostrar la lista de productos
+manager.displayProducts();
 
+// Modificar producto
+manager.updateProduct(1, "Producto Modificado", "Descripción 3", 11.99, 101, "imagen3.jpg", "ABC1234");
+
+// Mostrar la lista actualizada de productos
+manager.displayProducts();
+
+// Eliminar Producto
+manager.deleteProduct(2);
+
+// Mostrar la lista actualizada sin el producto eliminado 
+manager.displayProducts();
