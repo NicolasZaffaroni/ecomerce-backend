@@ -1,3 +1,5 @@
+
+    
     class TicketManager {
         #priceBase = 0.15;
         constructor() {

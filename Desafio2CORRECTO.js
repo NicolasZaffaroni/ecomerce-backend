@@ -1,9 +1,23 @@
-
-
+const fs = require('fs');
 
 class ProductManager {
-    constructor() {
-        this.products = [];
+    constructor(filePath) {
+        this.filePath = filePath;
+        this.products = this.loadProducts();
+    }
+
+    loadProducts() {
+        try {
+            const data = fs.readFileSync(this.filePath, 'utf8');
+            return JSON.parse(data) || [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    saveProducts() {
+        const data = JSON.stringify(this.products, null, 2);
+        fs.writeFileSync(this.filePath, data, 'utf8');
     }
 
     addProduct(title, description, price, thumbnail, code, stock) {
@@ -22,7 +36,6 @@ class ProductManager {
             stock
         };
 
-
         const productCode = this.products.find((con) => con.code === code);
 
         if (productCode) {
@@ -32,6 +45,7 @@ class ProductManager {
             this.products.push(newProduct);
             console.log("Producto añadido");
             this.displayProducts();
+            this.saveProducts(); // Guardar los productos en el archivo después de agregar uno nuevo
         }
     }
 
@@ -52,7 +66,6 @@ class ProductManager {
             console.log('---');
         });
     }
-    
 
     updateProduct(id, title, description, price, stock, thumbnail, code) {
         const productIndex = this.products.findIndex((product) => product.id === id);
@@ -60,7 +73,7 @@ class ProductManager {
             console.log("Producto no encontrado");
             return;
         }
-    
+
         this.products[productIndex] = {
             ...this.products[productIndex],
             id,
@@ -71,6 +84,9 @@ class ProductManager {
             thumbnail,
             code
         };
+
+        // Guardar los productos en el archivo después de actualizar
+        this.saveProducts();
     }
 
     deleteProduct(id) {
@@ -83,13 +99,17 @@ class ProductManager {
         this.products.splice(productIndex, 1);
         console.log("Producto eliminado");
         this.displayProducts();
+        
+        // Guardar los productos en el archivo después de eliminar
+        this.saveProducts();
     }
-    
-    }
-
+}
 
 // Ejemplo de uso:
-const manager = new ProductManager();
+const filePath = 'productos.json'; // Nombre del archivo donde se almacenarán los productos
+const manager = new ProductManager(filePath);
+
+
 
 // Agregar productos
 manager.addProduct("Producto 1", "Descripción 1", 10.99, "imagen1.jpg", "ABC123", 100);
@@ -108,6 +128,7 @@ if (product) {
     console.log("Producto no encontrado");
 }
 
+
 // Mostrar la lista de productos
 manager.displayProducts();
 
@@ -122,3 +143,6 @@ manager.deleteProduct(2);
 
 // Mostrar la lista actualizada sin el producto eliminado 
 manager.displayProducts();
+
+
+
