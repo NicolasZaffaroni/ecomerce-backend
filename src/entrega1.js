@@ -59,13 +59,20 @@ app.post('/products',(req,res)=>{
         res.status(201).json({message :'User created'})
 })
 
+//Modificar producto 
 
-app.put('/products/:cid',(req,res)=>{
+app.put('/products/:cId',(req,res)=>{
     const {codeId} = req.params
 
     const {title,description,price,thumbnail,code,stock} = req.body
 
+    if(!title || !description || !price || !thumbnail || !code || !stock) 
+    return res.status(400).json({error : 'Bad request'})
+
     const product = products.find(product => product.code === codeId)
+
+    if(!product) 
+    return res.status(404).json({error : 'Product not found'})
 
     product.title = title
     product.description = description
@@ -74,6 +81,7 @@ app.put('/products/:cid',(req,res)=>{
     product.code = code
     product.stock = stock
 
+    res.json({message : 'Product : update  '})
 })
     app.get('/products/:pid', (req, res) => {
         const productId = Number(req.params.pid);
@@ -90,3 +98,18 @@ app.put('/products/:cid',(req,res)=>{
         res.status(404).json({error:'Not found '})
     })
 
+
+    app.delete('/products/:cId',(req,res)=>{
+        const {codeId} = req.params
+
+        const productIndex = products.findIndex(product => product.code === codeId)
+
+        if(!productIndex=== -1) 
+        return res.status(404).json({error : 'Product not found'})
+    
+
+
+        products.splice(productIndex,1)
+
+        res.json({message : 'Product deleted'})
+    } )
