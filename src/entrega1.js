@@ -1,4 +1,4 @@
-const fs = require('fs');
+
 const express= require('express')
 
 
@@ -29,10 +29,7 @@ app.get('/products',(req,res) => {
     }
     } )
 
-//Mostrar todos los productos en servidor 
-app.get('/products', (req, res) => {
-    res.json({ message: products});
-});
+
 
 
 // Crear Nuevo producto
@@ -83,6 +80,8 @@ app.put('/products/:cId',(req,res)=>{
 
     res.json({message : 'Product : update  '})
 })
+
+//Mostrar productos por ID (FALTA PORNERLES ID )
     app.get('/products/:pid', (req, res) => {
         const productId = Number(req.params.pid);
         const product = manager.getProductById(productId);
@@ -98,7 +97,7 @@ app.put('/products/:cId',(req,res)=>{
         res.status(404).json({error:'Not found '})
     })
 
-
+// ELiminar Producto
     app.delete('/products/:cId',(req,res)=>{
         const {codeId} = req.params
 
