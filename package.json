@@ -1,12 +1,12 @@
 {
   "name": "ecommerce-backend",
   "version": "1.0.0",
-  "main": "entrega1.js",
+  "main": "app.js",
   "type":"module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon src/entrega1.js",
-    "start": "node src/entrega1.js"
+    "start:dev": "nodemon src/app.js",
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",

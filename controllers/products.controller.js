@@ -1,4 +1,5 @@
-import app from './server'
+
+
 
 const products =[]
 
@@ -131,7 +132,7 @@ app.patch('/products/:cId',(req,res)=>{
         const {codeId} = req.params
 
         const productIndex = products.findIndex(product => product.code === codeId)
-
+        
         if(!productIndex=== -1) 
         return res.status(404).json({error : 'Product not found'})
     
