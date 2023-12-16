@@ -1,5 +1,5 @@
 
-const express= require('express')
+import express from "express"
 
 
 const app = express()
@@ -18,8 +18,22 @@ const products =[]
 
 //Mostrar todos los productos en servidor 
 app.get('/products', (req, res) => {
-    res.json({ message: products });
+    res.json({ payload: products });
 });
+
+//Mostar producto especifico 
+app.get('/products', (req, res) => {
+
+    const {codeId} = req.params
+
+    const product = products.find(product => product.code === codeId)
+
+    if(!product) 
+    return res.status(404).json({error : 'Product not found'})
+
+    res.json({ payload: product });
+});
+
 
 
 app.get('/products',(req,res) => {
@@ -28,6 +42,9 @@ app.get('/products',(req,res) => {
         return res.json({ products: manager.products })
     }
     } )
+
+
+
 
 
 
@@ -53,10 +70,10 @@ app.post('/products',(req,res)=>{
 
         products.push(newProduct)
 
-        res.status(201).json({message :'User created'})
+        res.status(201).json({payload :'User created'})
 })
 
-//Modificar producto 
+//Modificar producto, (Enviando todos los campos obligatoriamente)
 
 app.put('/products/:cId',(req,res)=>{
     const {codeId} = req.params
@@ -78,8 +95,33 @@ app.put('/products/:cId',(req,res)=>{
     product.code = code
     product.stock = stock
 
-    res.json({message : 'Product : update  '})
+    res.json({payload : 'Product : update  '})
 })
+
+ //Modifica product sin tener que enviar todos los params de nuevo  
+
+app.patch('/products/:cId',(req,res)=>{
+    const {codeId} = req.params
+
+    const {title,description,price,thumbnail,code,stock} = req.body
+
+
+
+    const product = products.find(product => product.code === codeId)
+
+    if(!product) 
+    return res.status(404).json({error : 'Product not found'})
+
+    product.title = title
+    product.description = description
+    product.price = price
+    product.thumbnail = thumbnail
+    product.code = code
+    product.stock = stock
+
+    res.json({payload : 'Product : update  '})
+})
+
 
 //Mostrar productos por ID (FALTA PORNERLES ID )
     app.get('/products/:pid', (req, res) => {
@@ -89,7 +131,7 @@ app.put('/products/:cId',(req,res)=>{
         if (product) {
             return res.json({ Product: product });
         }
-        res.json({ message: 'Producto no encontrado' });
+        res.json({ payload: 'Producto no encontrado' });
         }
     );
 
@@ -103,6 +145,9 @@ app.put('/products/:cId',(req,res)=>{
 
         const productIndex = products.findIndex(product => product.code === codeId)
 
+        if(!productIndex === -1) 
+    return res.status(404).json({error : 'Product not found'})
+
         if(!productIndex=== -1) 
         return res.status(404).json({error : 'Product not found'})
     
@@ -110,5 +155,5 @@ app.put('/products/:cId',(req,res)=>{
 
         products.splice(productIndex,1)
 
-        res.json({message : 'Product deleted'})
+        res.json({payload : 'Product deleted'})
     } )
