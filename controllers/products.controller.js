@@ -1,16 +1,18 @@
+import { Router }from "express"
 
+const router = Router
 
 
 const products =[]
 
 
 //Mostrar todos los productos en servidor 
-app.get('/products', (req, res) => {
+router.get('/', (req, res) => {
     res.json({ payload: products });
 });
 
 //Mostar producto especifico 
-app.get('/products', (req, res) => {
+router.get('/', (req, res) => {
 
     const {codeId} = req.params
 
@@ -24,7 +26,7 @@ app.get('/products', (req, res) => {
 
 
 
-app.get('/products',(req,res) => {
+router.get('/',(req,res) => {
     const {limit} = req.query
     if(limit){
         return res.json({ products: manager.products })
@@ -38,7 +40,7 @@ app.get('/products',(req,res) => {
 
 
 // Crear Nuevo producto
-app.post('/products',(req,res)=>{
+router.post('/',(req,res)=>{
     const {
         title,
         description,
@@ -63,7 +65,7 @@ app.post('/products',(req,res)=>{
 
 //Modificar producto, (Enviando todos los campos obligatoriamente)
 
-app.put('/products/:cId',(req,res)=>{
+router.put('/:cId',(req,res)=>{
     const {codeId} = req.params
 
     const {title,description,price,thumbnail,code,stock} = req.body
@@ -88,7 +90,7 @@ app.put('/products/:cId',(req,res)=>{
 
  //Modifica product sin tener que enviar todos los params de nuevo  
 
-app.patch('/products/:cId',(req,res)=>{
+router.patch('/:cId',(req,res)=>{
     const {codeId} = req.params
 
     const {title,description,price,thumbnail,code,stock} = req.body
@@ -112,7 +114,7 @@ app.patch('/products/:cId',(req,res)=>{
 
 
 //Mostrar productos por ID (FALTA PORNERLES ID )
-    app.get('/products/:pid', (req, res) => {
+    router.get('/:pid', (req, res) => {
         const productId = Number(req.params.pid);
         const product = manager.getProductById(productId);
     
@@ -123,12 +125,12 @@ app.patch('/products/:cId',(req,res)=>{
         }
     );
 
-    app.get('*',(req,res)=> {
+    router.get('*',(req,res)=> {
         res.status(404).json({error:'Not found '})
     })
 
 // ELiminar Producto
-    app.delete('/products/:cId',(req,res)=>{
+    router.delete('/:cId',(req,res)=>{
         const {codeId} = req.params
 
         const productIndex = products.findIndex(product => product.code === codeId)
@@ -142,3 +144,7 @@ app.patch('/products/:cId',(req,res)=>{
 
         res.json({payload : 'Product deleted'})
     } )
+
+
+
+    export default router

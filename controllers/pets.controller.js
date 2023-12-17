@@ -1,29 +1,31 @@
+import express from "express"
 
+const router = express.Router
 
 const pets =[]
 
 
 //Mostrar todos los productos en servidor 
-app.get('/pets', (req, res) => {
+router.get('/', (req, res) => {
     res.json({ payload: pets });
 });
 
 //Mostar producto especifico 
-app.get('/pets', (req, res) => {
+router.get('/', (req, res) => {
 
     const {codeId} = req.params
 
     const pet = pets.find(pet => pet.code === codeId)
 
     if(!pet) 
-    return res.status(404).json({error : 'Product not found'})
+    return res.status(404).json({error : 'Pet not found'})
 
     res.json({ payload: pet });
 });
 
 
 
-app.get('/pets',(req,res) => {
+router.get('/',(req,res) => {
     const {limit} = req.query
     if(limit){
         return res.json({ pets: manager.pets })
@@ -37,7 +39,7 @@ app.get('/pets',(req,res) => {
 
 
 // Crear Nuevo producto
-app.post('/pets',(req,res)=>{
+router.post('/',(req,res)=>{
     const {
         name,
         breed,
@@ -56,7 +58,7 @@ app.post('/pets',(req,res)=>{
 
 //Modificar producto, (Enviando todos los campos obligatoriamente)
 
-app.put('/pets/:bId',(req,res)=>{
+router.put('/:bId',(req,res)=>{
     const {breedId} = req.params
 
     const {name,breed,age} = req.body
@@ -74,12 +76,12 @@ app.put('/pets/:bId',(req,res)=>{
     pet.age = age
     
 
-    res.json({payload : 'Product : update  '})
+    res.json({payload : 'Pet : update  '})
 })
 
  //Modifica pet sin tener que enviar todos los params de nuevo  
 
-app.patch('/pets/:bId',(req,res)=>{
+router.patch('/:bId',(req,res)=>{
     const {breedId} = req.params
 
     const {name, breed, age} = req.body
@@ -100,7 +102,7 @@ app.patch('/pets/:bId',(req,res)=>{
 
 
 //Mostrar productos por ID (FALTA PORNERLES ID )
-    app.get('/pets/:bid', (req, res) => {
+    router.get('/:bid', (req, res) => {
         const breedId = Number(req.params.bid);
         const pet = manager.getbreedById(breedId);
     
@@ -111,12 +113,12 @@ app.patch('/pets/:bId',(req,res)=>{
         }
     );
 
-    app.get('*',(req,res)=> {
+    router.get('*',(req,res)=> {
         res.status(404).json({error:'Not found '})
     })
 
 // ELiminar Producto
-    app.delete('/pets/:bId',(req,res)=>{
+    router.delete('/:bId',(req,res)=>{
         const {breedId} = req.params
 
         const petIndex = pets.findIndex(pet => pet.breed === breedId)
@@ -131,3 +133,6 @@ app.patch('/pets/:bId',(req,res)=>{
 
         res.json({payload : 'pet deleted'})
     } )
+
+
+    export default router
