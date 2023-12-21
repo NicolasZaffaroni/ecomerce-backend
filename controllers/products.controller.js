@@ -1,6 +1,8 @@
 import { Router }from "express"
+import convertTonumber from "../middlewares/convert-to-number-middleware";
+import uploader from "../utils/multer.util";
 
-const router = Router
+const router = Router()
 
 
 const products =[]
@@ -12,11 +14,11 @@ router.get('/', (req, res) => {
 });
 
 //Mostar producto especifico 
-router.get('/', (req, res) => {
+router.get('/:pid',convertTonumber, (req, res) => {
 
-    const {codeId} = req.params
+    const {pid} = req.params
 
-    const product = products.find(product => product.code === codeId)
+    const product = products.find(product => product.id === pid)
 
     if(!product) 
     return res.status(404).json({error : 'Product not found'})
@@ -40,22 +42,29 @@ router.get('/',(req,res) => {
 
 
 // Crear Nuevo producto
-router.post('/',(req,res)=>{
+router.post('/',uploader.single('img'),(req,res)=>{
+    
     const {
+        id,
         title,
         description,
         price,
         thumbnail,
         code,
-        stock} = req.body
+        stock,
+        } = req.body
+
+        const pathFile = req.file.path
 
         const newProduct = {
+
+        id:math.random()+1 ,
         title,
         description,
         price,
-        thumbnail,
+        thumbnail:pathFile,
         code,
-        stock
+        stock,
         }
 
         products.push(newProduct)
@@ -65,15 +74,15 @@ router.post('/',(req,res)=>{
 
 //Modificar producto, (Enviando todos los campos obligatoriamente)
 
-router.put('/:cId',(req,res)=>{
-    const {codeId} = req.params
+router.put('/:pid',(req,res)=>{
+    const {pId} = req.params
 
-    const {title,description,price,thumbnail,code,stock} = req.body
+    const {id,title,description,price,thumbnail,code,stock} = req.body
 
-    if(!title || !description || !price || !thumbnail || !code || !stock) 
+    if( !id ||!title || !description || !price || !thumbnail || !code || !stock) 
     return res.status(400).json({error : 'Bad request'})
 
-    const product = products.find(product => product.code === codeId)
+    const product = products.find(product => product.id === pId)
 
     if(!product) 
     return res.status(404).json({error : 'Product not found'})
@@ -90,14 +99,14 @@ router.put('/:cId',(req,res)=>{
 
  //Modifica product sin tener que enviar todos los params de nuevo  
 
-router.patch('/:cId',(req,res)=>{
-    const {codeId} = req.params
+router.patch('/:pid',(req,res)=>{
+    const {pId} = req.params
 
     const {title,description,price,thumbnail,code,stock} = req.body
 
 
 
-    const product = products.find(product => product.code === codeId)
+    const product = products.find(product => product.id === pId)
 
     if(!product) 
     return res.status(404).json({error : 'Product not found'})
@@ -113,27 +122,11 @@ router.patch('/:cId',(req,res)=>{
 })
 
 
-//Mostrar productos por ID (FALTA PORNERLES ID )
-    router.get('/:pid', (req, res) => {
-        const productId = Number(req.params.pid);
-        const product = manager.getProductById(productId);
-    
-        if (product) {
-            return res.json({ Product: product });
-        }
-        res.json({ payload: 'Producto no encontrado' });
-        }
-    );
-
-    router.get('*',(req,res)=> {
-        res.status(404).json({error:'Not found '})
-    })
-
 // ELiminar Producto
-    router.delete('/:cId',(req,res)=>{
-        const {codeId} = req.params
+    router.delete('/:pid',(req,res)=>{
+        const {pId} = req.params
 
-        const productIndex = products.findIndex(product => product.code === codeId)
+        const productIndex = products.findIndex(product => product.id === pId)
         
         if(!productIndex=== -1) 
         return res.status(404).json({error : 'Product not found'})

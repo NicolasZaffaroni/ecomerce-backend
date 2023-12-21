@@ -1,21 +1,23 @@
 import { Router }from "express"
+import convertTonumber from "../middlewares/convert-to-number-middleware";
+import uploader from "../utils/multer.util";
 
 const router = Router()
 
 const pets =[]
 
 
-//Mostrar todos los productos en servidor 
+//Mostrar todos los pets en servidor 
 router.get('/', (req, res) => {
     res.json({ payload: pets });
 });
 
-//Mostar producto especifico 
-router.get('/', (req, res) => {
+//Mostar pet especifico 
+router.get('/:pid',convertTonumber ,(req, res) => {
 
-    const {codeId} = req.params
+    const {pid} = req.params
 
-    const pet = pets.find(pet => pet.code === codeId)
+    const pet = pets.find(pet => pet.id===  pid)
 
     if(!pet) 
     return res.status(404).json({error : 'Pet not found'})
@@ -38,14 +40,16 @@ router.get('/',(req,res) => {
 
 
 
-// Crear Nuevo producto
-router.post('/',(req,res)=>{
+// Crear Nuevo pet
+router.post('/',uploader,(req,res)=>{
     const {
+        id,
         name,
         breed,
         age} = req.body
 
-        const newProduct = {
+        const newPet = {
+        id,
         name,
         breed,
         age
@@ -56,21 +60,22 @@ router.post('/',(req,res)=>{
         res.status(201).json({payload :'pet created'})
 })
 
-//Modificar producto, (Enviando todos los campos obligatoriamente)
+//Modificar pet , (Enviando todos los campos obligatoriamente)
 
-router.put('/:bId',(req,res)=>{
-    const {breedId} = req.params
+router.put('/:pid',(req,res)=>{
+    const {pid} = req.params
 
     const {name,breed,age} = req.body
 
-    if(!name|| !breed || !age) 
+    if(
+        !id || !name|| !breed || !age) 
     return res.status(400).json({error : 'Bad request'})
 
-    const pet = pets.find(pet => pet.code === codeId)
+    const pet = pets.find(pet => pet.id === pid)
 
     if(!pet) 
     return res.status(404).json({error : 'Pet not found'})
-
+    pet.id = id
     pet.name = name
     pet.breed = breed
     pet.age = age
@@ -81,14 +86,14 @@ router.put('/:bId',(req,res)=>{
 
  //Modifica pet sin tener que enviar todos los params de nuevo  
 
-router.patch('/:bId',(req,res)=>{
-    const {breedId} = req.params
+router.patch('/:pid',(req,res)=>{
+    const {pid} = req.params
 
     const {name, breed, age} = req.body
 
 
 
-    const pet = pets.find(pet => pet.code === breedId)
+    const pet = pets.find(pet => pet.id === pid)
 
     if(!pet) 
     return res.status(404).json({error : 'Pet not found'})
@@ -101,27 +106,11 @@ router.patch('/:bId',(req,res)=>{
 })
 
 
-//Mostrar productos por ID (FALTA PORNERLES ID )
-    router.get('/:bid', (req, res) => {
-        const breedId = Number(req.params.bid);
-        const pet = manager.getbreedById(breedId);
-    
-        if (pet) {
-            return res.json({ Pet : pet });
-        }
-        res.json({ payload: 'Pet not found' });
-        }
-    );
+// ELiminar Pet
+    router.delete('/:pId',(req,res)=>{
+        const {pId} = req.params
 
-    router.get('*',(req,res)=> {
-        res.status(404).json({error:'Not found '})
-    })
-
-// ELiminar Producto
-    router.delete('/:bId',(req,res)=>{
-        const {breedId} = req.params
-
-        const petIndex = pets.findIndex(pet => pet.breed === breedId)
+        const petIndex = pets.findIndex(pet => pet.id === pId)
 
 
         if(!petIndex=== -1) 
