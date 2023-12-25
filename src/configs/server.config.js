@@ -8,17 +8,15 @@ const app = express()
 
 app.engine('handlebars',handlebars.engine())
 app.set('views',process.cwd() + '/src/views')
+app.set('view engine','handlebars')
 
-app.get('/users',(req,res) => {
-    
-    res.render('users.handlebars')
 
-})
 //Encontrar ruta 
 // console.log(process.cwd())
-
+app.use(express.static(process.cwd()+'/src/public'))
 app.use(express.json())
-app.use(express.static('/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend'+'/src/public'))
+
+
 
 router(app)
 
