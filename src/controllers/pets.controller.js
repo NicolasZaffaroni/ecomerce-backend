@@ -1,6 +1,6 @@
 import { Router } from "express";
-import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/middlewares/convert-to-number-middleware.js";
-import uploader from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/utils/multer.util.js";
+import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/middlewares/convert-to-number-middleware.js";
+import uploader from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/utils/multer.util.js";
 
 const router = Router();
 

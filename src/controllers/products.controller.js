@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/middlewares/convert-to-number-middleware.js";
-import uploader from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/utils/multer.util.js";
+import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/middlewares/convert-to-number-middleware.js";
+import uploader from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/utils/multer.util.js";
 
 const router = Router();
 
@@ -32,13 +32,11 @@ router.get("/", (req, res) => {
 
 // Crear Nuevo producto
 router.post("/", uploader.single("thumbnail"), (req, res) => {
-
-  const {title,description,price,code,stock } = req.body
+  const { title, description, price, code, stock } = req.body;
   const pathFile = req.file.path;
 
-
   const newProduct = {
-    id:products.length + 1,
+    id: products.length + 1,
     title,
     description,
     price,
@@ -112,4 +110,3 @@ router.delete("/:pid", (req, res) => {
 });
 
 export default router;
-

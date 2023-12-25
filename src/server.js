@@ -1,7 +1,7 @@
 
 import express from "express"
 
-import router from "./routes/index.js"
+import router from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/routes/index.js"
 
 
 const app = express()
