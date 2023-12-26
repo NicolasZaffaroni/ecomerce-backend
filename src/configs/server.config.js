@@ -6,14 +6,17 @@ import handlebars   from "express-handlebars";
 
 const app = express()
 
+
+app.use(express.static(process.cwd+'/src/public'))
+
 app.engine('handlebars',handlebars.engine())
 app.set('views',process.cwd() + '/src/views')
-app.set('view engine','handlebars')
+app.set('views engine','handlebars')
 
 
 //Encontrar ruta 
 // console.log(process.cwd())
-app.use(express.static(process.cwd()+'/src/public'))
+
 app.use(express.json())
 
 
