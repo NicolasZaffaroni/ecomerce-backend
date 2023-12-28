@@ -16,6 +16,7 @@ router.get('/products',(req,res) => {
 
 
 //FALLA TAREA CLASE PLANTILLAS 
+
 router.post('/users',(req,res)=>{
     res.render('register',{
         nombre: "nombre",
@@ -32,8 +33,7 @@ router.post('/users',(req,res)=>{
     users.push(newUser);
 
     res.status(201).json({ payload: "user created" });
+    
 })
-
-
 
 export default router 
