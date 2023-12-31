@@ -8,7 +8,7 @@ const users = []
 router.get('/products',(req,res) => {
 
     res.render('products', {
-        style: "/src/public/css/index.css",
+        style: "src/public/css/index.css",
         title:'Products'
     })
 
