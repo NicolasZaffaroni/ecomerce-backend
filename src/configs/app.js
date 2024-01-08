@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 
 
 
-const DEFAULT_PORT = 8080;
+const DEFAULT_PORT = 3010;
 const port = process.env.PORT || DEFAULT_PORT;
 
 
@@ -18,7 +18,7 @@ const io = new Server(httpServer)
 io.on('connection',socket => {
     console.log(socket.id)
 
-    socket.on('message', data =>{
+    io.on('message', data =>{
         console.log(data)
     })
 

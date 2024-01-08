@@ -7,7 +7,7 @@ const users = []
 //FALLA STYLE CSS
 router.get('/products',(req,res) => {
 
-    res.render('products', {
+    res.render('products.handlebars', {
         style: "/src/public/css/index.css",
         title:'Products'
     })
@@ -18,7 +18,7 @@ router.get('/products',(req,res) => {
 //FALLA TAREA CLASE PLANTILLAS 
 
 router.post('/users',(req,res)=>{
-    res.render('register',{
+    res.render('users.handlebars',{
         nombre: "nombre",
         correo : "correo",
         contraseña:"contraseña"
@@ -34,6 +34,10 @@ router.post('/users',(req,res)=>{
 
     res.status(201).json({ payload: "user created" });
     
+})
+
+router.get('/chat',(req,res)=>{
+    res.render('chat.handlebars')
 })
 
 export default router 
