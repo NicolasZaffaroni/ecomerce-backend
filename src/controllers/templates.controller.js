@@ -8,7 +8,7 @@ const users = []
 router.get('/products',(req,res) => {
 
     res.render('products.handlebars', {
-        style: "/src/public/css/index.css",
+        style: "/css/index.css",
         title:'Products'
     })
 
@@ -21,7 +21,8 @@ router.post('/users',(req,res)=>{
     res.render('users.handlebars',{
         nombre: "nombre",
         correo : "correo",
-        contraseña:"contraseña"
+        contraseña:"contraseña",
+        title:'Users'
     })
 
     const newUser = {

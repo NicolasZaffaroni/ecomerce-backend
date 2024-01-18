@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/middlewares/convert-to-number-middleware.js";
-import uploader from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/utils/multer.util.js";
+import convertTonumber from "../middlewares/convert-to-number-middleware.js";
+import uploader from "../utils/multer.util.js";
 
 const router = Router();
 
@@ -33,14 +33,13 @@ router.get("/", (req, res) => {
 // Crear Nuevo producto
 router.post("/", uploader.single("thumbnail"), (req, res) => {
   const { title, description, price, code, stock } = req.body;
-  const pathFile = req.file.path;
+  
 
   const newProduct = {
     id: products.length + 1,
     title,
     description,
     price,
-    thumbnail: pathFile,
     code,
     stock,
   };
@@ -55,9 +54,9 @@ router.post("/", uploader.single("thumbnail"), (req, res) => {
 router.put("/:pid", (req, res) => {
   const { pId } = req.params;
 
-  const { id, title, description, price, thumbnail, code, stock } = req.body;
+  const { id, title, description, price,  code, stock } = req.body;
 
-  if (!id || !title || !description || !price || !thumbnail || !code || !stock)
+  if (!id || !title || !description || !price  || !code || !stock)
     return res.status(400).json({ error: "Bad request" });
 
   const product = products.find((product) => product.id === pId);
@@ -67,7 +66,6 @@ router.put("/:pid", (req, res) => {
   product.title = title;
   product.description = description;
   product.price = price;
-  product.thumbnail = thumbnail;
   product.code = code;
   product.stock = stock;
 
@@ -79,7 +77,7 @@ router.put("/:pid", (req, res) => {
 router.patch("/:pid", (req, res) => {
   const { pId } = req.params;
 
-  const { title, description, price, thumbnail, code, stock } = req.body;
+  const { title, description, price,  code, stock } = req.body;
 
   const product = products.find((product) => product.id === pId);
 
@@ -88,7 +86,6 @@ router.patch("/:pid", (req, res) => {
   product.title = title;
   product.description = description;
   product.price = price;
-  product.thumbnail = thumbnail;
   product.code = code;
   product.stock = stock;
 

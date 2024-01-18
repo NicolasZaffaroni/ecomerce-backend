@@ -1,4 +1,6 @@
 
+import {io} from "socket.io"
+
 const socket = io()
 
 socket.emit("message",'hello stalkers')

@@ -4,7 +4,8 @@ import { Server } from 'socket.io';
 
 
 
-const DEFAULT_PORT = 3010;
+const DEFAULT_PORT = 3211
+;
 const port = process.env.PORT || DEFAULT_PORT;
 
 

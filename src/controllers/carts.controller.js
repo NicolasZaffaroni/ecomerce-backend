@@ -1,5 +1,6 @@
 import { Router } from "express";
-import convertTonumber from "/Users/nicozaffaroni95/Desktop/Proyectos/Ecommerce-Backend/src/middlewares/convert-to-number-middleware.js";
+import convertTonumber from "../middlewares/convert-to-number-middleware.js";
+
 
 const router = Router();
 
