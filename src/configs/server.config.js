@@ -11,7 +11,7 @@ app.use(express.static(process.cwd() + "/public"));
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
-app.set("views", process.cwd() + "../src/views");
+app.set("views", process.cwd() + "/src/views");
 
 
 
