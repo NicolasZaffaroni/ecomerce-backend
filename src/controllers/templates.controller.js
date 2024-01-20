@@ -11,7 +11,8 @@ router.get('/products', (req, res) => {
     });
 });
 
-// Ruta para manejar la creación de usuarios y guardar en el sistema de archivos
+
+
 router.post('/users', async (req, res) => {
     const { nombre, correo, contraseña } = req.body;
 
@@ -20,6 +21,13 @@ router.post('/users', async (req, res) => {
         correo,
         contraseña,
     };
+
+        // Renderizar la vista users.handlebars
+        res.render('users.handlebars',
+        { newUser,
+        title: 'Users' });
+
+
 
     // Guardar el nuevo usuario en un archivo JSON
     try {
@@ -34,6 +42,8 @@ router.post('/users', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
+
+
 
 // Ruta para renderizar la página de chat
 router.get('/chat', (req, res) => {
