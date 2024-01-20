@@ -1,14 +1,13 @@
 import { Router } from "express";
 
-const { Router } = require('express');
-const fs = require('fs/promises');
+import fs from "fs/promises";
 
 const router = Router();
 
 // Ruta para renderizar la página de productos
 router.get('/products', (req, res) => {
     res.render('products.handlebars', {
-        title: 'Productos'
+        title: 'Products'
     });
 });
 
@@ -41,6 +40,5 @@ router.get('/chat', (req, res) => {
     res.render('chat.handlebars');
 });
 
-module.exports = router;
 
 export default router 

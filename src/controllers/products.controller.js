@@ -12,10 +12,16 @@ let products = [];
 // Cargar productos desde el archivo al inicio del servidor
 async function loadProducts() {
   try {
-    const data = await fs.readFile(PRODUCTS_FILE_PATH, "utf-8");
+    const data = await fs.readFile(PRODUCTS_FILE_PATH, 'utf-8');
     products = JSON.parse(data) || [];
   } catch (error) {
-    console.error("Error loading products:", error);
+    if (error.code === 'ENOENT') {
+      // El archivo no existe, así que lo creamos
+      await fs.writeFile(PRODUCTS_FILE_PATH, '[]');
+      products = [];
+    } else {
+      console.error('Error loading products:', error);
+    }
   }
 }
 
