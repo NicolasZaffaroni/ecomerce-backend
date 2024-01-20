@@ -1,21 +1,44 @@
 import { Router } from "express";
-
-import convertTonumber from "../middlewares/convert-to-number-middleware.js";
+import fs from "fs/promises";
+import convertToNumber from "../middlewares/convert-to-number-middleware.js";
 import uploader from "../utils/multer.util.js";
 
 const router = Router();
 
-const products = [];
+const PRODUCTS_FILE_PATH = "products.json";
 
-//Mostrar todos los productos en servidor
+let products = [];
+
+// Cargar productos desde el archivo al inicio del servidor
+async function loadProducts() {
+  try {
+    const data = await fs.readFile(PRODUCTS_FILE_PATH, "utf-8");
+    products = JSON.parse(data) || [];
+  } catch (error) {
+    console.error("Error loading products:", error);
+  }
+}
+
+// Guardar productos en el archivo
+async function saveProducts() {
+  try {
+    await fs.writeFile(PRODUCTS_FILE_PATH, JSON.stringify(products, null, 2));
+  } catch (error) {
+    console.error("Error saving products:", error);
+  }
+}
+
+// Cargar productos al iniciar el servidor
+loadProducts();
+
+// Mostrar todos los productos en el servidor
 router.get("/", (req, res) => {
   res.json({ payload: products });
 });
 
-//Mostar producto especifico
-router.get("/:pid", convertTonumber, (req, res) => {
+// Mostrar producto específico
+router.get("/:pid", convertToNumber, (req, res) => {
   const { pid } = req.params;
-
   const product = products.find((product) => product.id === pid);
 
   if (!product) return res.status(404).json({ error: "Product not found" });
@@ -23,20 +46,12 @@ router.get("/:pid", convertTonumber, (req, res) => {
   res.json({ payload: product });
 });
 
-router.get("/", (req, res) => {
-  const { limit } = req.query;
-  if (limit) {
-    return res.json({ products: manager.products });
-  }
-});
-
 // Crear Nuevo producto
 router.post("/", uploader.single("thumbnail"), (req, res) => {
   const { title, description, price, code, stock } = req.body;
-  
 
   const newProduct = {
-    id: products.length + 1,
+    id: String(products.length + 1),
     title,
     description,
     price,
@@ -45,63 +60,73 @@ router.post("/", uploader.single("thumbnail"), (req, res) => {
   };
 
   products.push(newProduct);
+  saveProducts(); // Guardar productos después de cada creación
 
   res.status(201).json({ payload: "Product created" });
 });
 
-//Modificar producto, (Enviando todos los campos obligatoriamente)
-
+// Modificar producto (Enviando todos los campos obligatoriamente)
 router.put("/:pid", (req, res) => {
-  const { pId } = req.params;
+  const { pid } = req.params;
+  const { id, title, description, price, code, stock } = req.body;
 
-  const { id, title, description, price,  code, stock } = req.body;
-
-  if (!id || !title || !description || !price  || !code || !stock)
+  if (!id || !title || !description || !price || !code || !stock)
     return res.status(400).json({ error: "Bad request" });
 
-  const product = products.find((product) => product.id === pId);
+  const productIndex = products.findIndex((product) => product.id === pid);
 
-  if (!product) return res.status(404).json({ error: "Product not found" });
+  if (productIndex === -1) return res.status(404).json({ error: "Product not found" });
 
-  product.title = title;
-  product.description = description;
-  product.price = price;
-  product.code = code;
-  product.stock = stock;
+  products[productIndex] = {
+    id,
+    title,
+    description,
+    price,
+    code,
+    stock,
+  };
 
-  res.json({ payload: "Product : update  " });
+  saveProducts(); 
+  // Guardar productos después de cada modificación
+
+  res.json({ payload: "Product updated" });
 });
 
-//Modifica product sin tener que enviar todos los params de nuevo
-
+// Modificar producto sin tener que enviar todos los params de nuevo
 router.patch("/:pid", (req, res) => {
-  const { pId } = req.params;
+  const { pid } = req.params;
+  const { title, description, price, code, stock } = req.body;
 
-  const { title, description, price,  code, stock } = req.body;
+  const productIndex = products.findIndex((product) => product.id === pid);
 
-  const product = products.find((product) => product.id === pId);
+  if (productIndex === -1) return res.status(404).json({ error: "Product not found" });
 
-  if (!product) return res.status(404).json({ error: "Product not found" });
+  products[productIndex] = {
+    ...products[productIndex],
+    title: title || products[productIndex].title,
+    description: description || products[productIndex].description,
+    price: price || products[productIndex].price,
+    code: code || products[productIndex].code,
+    stock: stock || products[productIndex].stock,
+  };
 
-  product.title = title;
-  product.description = description;
-  product.price = price;
-  product.code = code;
-  product.stock = stock;
+  saveProducts(); 
+  // Guardar productos después de cada modificación
 
-  res.json({ payload: "Product : update  " });
+  res.json({ payload: "Product updated" });
 });
 
-// ELiminar Producto
+// Eliminar Producto
 router.delete("/:pid", (req, res) => {
-  const { pId } = req.params;
+  const { pid } = req.params;
 
-  const productIndex = products.findIndex((product) => product.id === pId);
+  const productIndex = products.findIndex((product) => product.id === pid);
 
-  if (!productIndex === -1)
-    return res.status(404).json({ error: "Product not found" });
+  if (productIndex === -1) return res.status(404).json({ error: "Product not found" });
 
   products.splice(productIndex, 1);
+  saveProducts(); 
+  // Guardar productos después de cada eliminación
 
   res.json({ payload: "Product deleted" });
 });

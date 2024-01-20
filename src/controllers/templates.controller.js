@@ -1,43 +1,46 @@
 import { Router } from "express";
 
+const { Router } = require('express');
+const fs = require('fs/promises');
+
 const router = Router();
 
-const users = []
-
-//FALLA STYLE CSS
-router.get('/products',(req,res) => {
-
+// Ruta para renderizar la página de productos
+router.get('/products', (req, res) => {
     res.render('products.handlebars', {
-        title:'Products'
-    })
+        title: 'Productos'
+    });
+});
 
-})
-
-
-//FALLA TAREA CLASE PLANTILLAS 
-
-router.post('/users',(req,res)=>{
-    res.render('users.handlebars',{
-        nombre: "nombre",
-        correo : "correo",
-        contraseña:"contraseña",
-        title:'Users'
-    })
+// Ruta para manejar la creación de usuarios y guardar en el sistema de archivos
+router.post('/users', async (req, res) => {
+    const { nombre, correo, contraseña } = req.body;
 
     const newUser = {
         nombre,
         correo,
         contraseña,
     };
-    
-    users.push(newUser);
 
-    res.status(201).json({ payload: "user created" });
-    
-})
+    // Guardar el nuevo usuario en un archivo JSON
+    try {
+        const existingUsers = await fs.readFile('users.json', 'utf-8');
+        const users = JSON.parse(existingUsers) || [];
+        users.push(newUser);
 
-router.get('/chat',(req,res)=>{
-    res.render('chat.handlebars')
-})
+        await fs.writeFile('users.json', JSON.stringify(users, null, 2));
+        res.status(201).json({ payload: "Usuario creado" });
+    } catch (error) {
+        console.error('Error al guardar los datos del usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Ruta para renderizar la página de chat
+router.get('/chat', (req, res) => {
+    res.render('chat.handlebars');
+});
+
+module.exports = router;
 
 export default router 
