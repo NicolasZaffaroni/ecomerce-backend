@@ -13,7 +13,7 @@ router.get('/products', (req, res) => {
 
 
 
-router.post('/users', async (req, res) => {
+router.get('/users', async (req, res) => {
     const { nombre, correo, contraseña } = req.body;
 
     const newUser = {
