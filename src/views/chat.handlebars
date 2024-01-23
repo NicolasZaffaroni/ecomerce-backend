@@ -1,5 +1,13 @@
 
-    <h1>Chat </h1>
+    <body>
+    <div class="container">
+        <h2>Usuario</h2>
+            <label for="username">Mensaje de Usuario</label>
+            <input type="text" id="chatBox" name="username" required>    
+            <div id="dynamicMessage">
+        <p id="messageLogs"></p>
+    </div>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <script src="/js/chat.js"></script>
